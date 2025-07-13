@@ -4,101 +4,108 @@ A Retrieval-Augmented Generation (RAG) chatbot that lets users upload text docum
 This project demonstrates building an interactive question-answering system over custom documents, using Streamlit for the UI, LangChain for retrieval orchestration, and ChromaDB as the vector store.
 
 Project Purpose
-This chatbot helps users interrogate unstructured text documents by turning them into searchable knowledge bases.
+   This chatbot helps users interrogate unstructured text documents by turning them into searchable knowledge bases.
 
-Chosen document type: Plain-text .txt files.
+Chosen document type: 
+   Plain-text .txt files.
 
 Typical use cases:
 
-Research papers
+   Research papers
 
-Manuals and policy docs
+   Manuals and policy docs
 
-Log files
+   Log files
 
 Architecture Overview
 Components:
 
 Streamlit Frontend
 
-Uploads text documents.
+  Uploads text documents.
 
-Provides a chat interface.
+  Provides a chat interface.
 
-Displays answers and sources.
+  Displays answers and sources.
 
 LangChain Pipeline
 
-Splits uploaded text into chunks.
+  Splits uploaded text into chunks.
 
-Generates embeddings (HuggingFace or Azure).
+  Generates embeddings (HuggingFace or Azure).
 
-Stores/retrieves embeddings from ChromaDB.
+  Stores/retrieves embeddings from ChromaDB.
 
-Uses Groq LLM to answer questions with retrieved context.
+  Uses Groq LLM to answer questions with retrieved context.
+  
 
 ChromaDB
 
-Persistent vector database.
+  Persistent vector database.
 
-Runs as a separate service in Docker Compose.
+  Runs as a separate service in Docker Compose.
+
 
 Flow Diagram
 
-User -> Streamlit -> LangChain -> ChromaDB
+  User -> Streamlit -> LangChain -> ChromaDB
                            |
                         Groq LLM
 
 Chunking Strategy
-Splitter: RecursiveCharacterTextSplitter
+
+ Splitter: RecursiveCharacterTextSplitter
 
 Settings:
 
-chunk_size=1000
+  chunk_size=1000
 
-chunk_overlap=100
+  chunk_overlap=100
 
 This balances context coverage with retrieval precision, ensuring the model has enough context to answer questions accurately.
 
 Embedding Model
-Default: HuggingFace model BAAI/bge-small-en-v1.5
+  Default: HuggingFace model BAAI/bge-small-en-v1.5
 
-Free and fast
+  Free and fast
 
-Supports CPU
+  Supports CPU
 
-Normalized embeddings for better semantic search
+  Normalized embeddings for better semantic search
+
 
 Optional: Azure OpenAI Embeddings
 
-Can be enabled via environment variables
+  Can be enabled via environment variables
 
 Assumptions
-Input documents are plain-text .txt.
+  Input documents are plain-text .txt.
 
-User provides their own API keys (Groq, optionally Azure).
+  User provides their own API keys (Groq, optionally Azure).
 
-The vector store is local on-disk, mounted via Docker.
+  The vector store is local on-disk, mounted via Docker.
 
-Chunk size and retrieval parameters are configurable via the UI.
+  Chunk size and retrieval parameters are configurable via the UI.
 
 🚀 Getting Started
 
 1. Clone the Repository
 
    git clone https://github.com/senyonjohenry/Rag-Chatbot.git
-cd Rag-Chatbot
+ 
+   cd Rag-Chatbot
+
 
 2. Create a .env File
 
-GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=llama3-70b-8192
+  GROQ_API_KEY=your_groq_api_key
+  GROQ_MODEL=llama3-70b-8192
 
-AZURE_EMBEDDING_API_KEY=your_azure_openai_key
-AZURE_EMBEDDING_BASE=your_azure_openai_base_url
+  AZURE_EMBEDDING_API_KEY=your_azure_openai_key
+  AZURE_EMBEDDING_BASE=your_azure_openai_base_url
 
-CHROMA_SERVER_HOST=chroma
-CHROMA_SERVER_HTTP_PORT=8000
+  CHROMA_SERVER_HOST=chroma
+  CHROMA_SERVER_HTTP_PORT=8000
 
 Note: Do not commit your .env file to GitHub!
 
@@ -108,22 +115,23 @@ Note: Do not commit your .env file to GitHub!
 
    This command:
 
-Builds the Streamlit app image with all dependencies.
+  Builds the Streamlit app image with all dependencies.
 
-Pulls the official ChromaDB image.
+  Pulls the official ChromaDB image.
 
 4. Start the App
 
    docker compose up
    
-This will:
+ This will:
 
-Start ChromaDB on port 8000.
+  Start ChromaDB on port 8000.
 
-Launch the Streamlit frontend on port 8501.
+  Launch the Streamlit frontend on port 8501.
 
 5. Access the App
-Open your browser and go to:
+  Open your browser and go to:
+
 http://localhost:8501
 
 
@@ -138,21 +146,23 @@ http://localhost:8501
 └── docker-compose.yml
 
 🧪 Notes for Development
-The app persists embeddings to ./db.
 
-Uploading new documents rebuilds the vector store.
+   The app persists embeddings to ./db.
 
-You can tune chunk size and temperature from the Streamlit sidebar.
+   Uploading new documents rebuilds the vector store.
+
+   You can tune chunk size and temperature from the Streamlit sidebar.
 
 ✅ Requirements
-Docker and Docker Compose
 
-Groq API key
+  Docker and Docker Compose
 
-(Optional) Azure OpenAI API key for embeddings
+  Groq API key
 
- Contributing
-Contributions welcome! Please open an issue to discuss improvements or fixes.
+  (Optional) Azure OpenAI API key for embeddings
+
+Contributing
+  Contributions welcome! Please open an issue to discuss improvements or fixes.
 
 ✨ Author
 Senyonjo Henry
