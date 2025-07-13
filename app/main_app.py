@@ -9,7 +9,7 @@ st.set_page_config(
     layout="wide",
     page_icon="🤖" 
 )
-st.title("📚 Document Intelligence Chatbot")  # More descriptive name
+st.title("📚 Document Intelligence Chatbot") 
 
 # --- Sidebar ---
 with st.sidebar:
@@ -62,7 +62,7 @@ for message in st.session_state.messages:
                 for doc in message["sources"]:
                     st.code(doc.page_content, language="text")
 
-# Enhanced input with on-submit
+# Enhancing input with on-submit
 if prompt := st.chat_input("Ask anything about the document..."):
     if not os.path.exists("./db"):
         st.error("Please upload a document first!")

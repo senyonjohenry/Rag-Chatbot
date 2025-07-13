@@ -2,7 +2,7 @@ import os
 import chromadb
 from dotenv import load_dotenv
 
-from langchain.embeddings import AzureOpenAIEmbeddings
+from langchain_community.embeddings import AzureOpenAIEmbeddings
 from langchain_groq import ChatGroq
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.vectorstores import Chroma
@@ -12,9 +12,9 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from chromadb.config import Settings
 
 
-# --------------------------------
-# Load Environment Variables
-# --------------------------------
+
+# Loading Environment Variables
+
 load_dotenv()
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
@@ -23,29 +23,29 @@ GROQ_MODEL = os.getenv("GROQ_MODEL")
 AZURE_EMBEDDING_API_KEY = os.getenv("AZURE_EMBEDDING_API_KEY")
 AZURE_EMBEDDING_BASE = os.getenv("AZURE_EMBEDDING_BASE")
 
-# --------------------------------
-# 1. Get Embeddings Model (Azure)
-# --------------------------------
+
+# Getting Embeddings Model (Azure)
+
 def get_embeddings_model():
     return HuggingFaceEmbeddings(
         model_name="BAAI/bge-small-en-v1.5",  # Best balance of speed & quality
-        model_kwargs={"device": "cpu"},       # Use "cuda" if you have GPU
+        model_kwargs={"device": "cpu"},       
         encode_kwargs={"normalize_embeddings": True}  # Crucial for similarity search
     )
 
 
-# --------------------------------
-# 2. Get Groq LLM
-# --------------------------------
+
+# Getting Groq LLM
+
 def get_llm():
     return ChatGroq(
         api_key=GROQ_API_KEY,
         model_name=GROQ_MODEL
     )
 
-# --------------------------------
+
 # 3. Load and Chunk Document
-# --------------------------------
+
 def load_and_chunk(path):
     with open(path, "r", encoding="utf-8") as f:
         text = f.read()
@@ -57,9 +57,8 @@ def load_and_chunk(path):
     chunks = splitter.split_text(text)
     return chunks
 
-# --------------------------------
 # 4. Create Vector Store
-# --------------------------------
+
 def create_vector_store(chunks, persist_directory="./db"):
     embeddings = get_embeddings_model() 
     vectordb = Chroma.from_texts(
@@ -70,9 +69,9 @@ def create_vector_store(chunks, persist_directory="./db"):
     vectordb.persist()
     return vectordb
 
-# --------------------------------
+
 # 5. Load Existing Store
-# --------------------------------
+
 def load_vector_store(persist_directory="./db"):
     embeddings = get_embeddings_model()
     return Chroma(
@@ -80,9 +79,9 @@ def load_vector_store(persist_directory="./db"):
         embedding_function=embeddings
     )
 
-# --------------------------------
+
 # 6. Build Retrieval QA Chain
-# --------------------------------
+
 def build_qa_chain(vectordb):
     llm = get_llm()
     
